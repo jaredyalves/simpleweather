@@ -35,7 +35,7 @@ const App = () => {
                         contentEditable
                         onInput={handleInput}
                         onKeyDown={handleKeyDown}
-                        className="border-b border-b-neutral-400 p-2 text-white focus:border-b-white"
+                        className="border-b border-b-neutral-400 p-2 font-bold text-white focus:border-b-white"
                         dangerouslySetInnerHTML={{ __html: 'London, GB' }}
                     />
                     , broken clouds.
