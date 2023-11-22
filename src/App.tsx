@@ -154,13 +154,17 @@ const App = () => {
                             <div className="flex divide-x">
                                 <div className="px-2">
                                     {data?.main
-                                        ? k2c(data.main.temp_min)
+                                        ? symbol === Symbol.Celsius
+                                            ? k2c(data.main.temp_min)
+                                            : k2f(data.main.temp_min)
                                         : '...'}
                                     &deg;
                                 </div>
                                 <div className="px-2">
                                     {data?.main
-                                        ? k2c(data.main.temp_max)
+                                        ? symbol === Symbol.Celsius
+                                            ? k2c(data.main.temp_max)
+                                            : k2f(data.main.temp_max)
                                         : '...'}
                                     &deg;
                                 </div>
