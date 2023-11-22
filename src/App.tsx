@@ -9,6 +9,11 @@ interface weather {
     weather: {
         description: string;
     }[];
+    main: {
+        temp: number;
+        temp_min: number;
+        temp_max: number;
+    };
 }
 
 const App = () => {
@@ -63,21 +68,44 @@ const App = () => {
     return (
         <>
             <div className="flex h-screen flex-col items-center justify-center">
-                <div className="text-2xl text-neutral-400">
-                    Right now in&nbsp;
-                    <span
-                        autoFocus
-                        contentEditable
-                        onInput={handleInput}
-                        onKeyDown={handleKeyDown}
-                        className="border-b border-b-neutral-400 p-2 font-bold text-white focus:border-b-white"
-                        dangerouslySetInnerHTML={{ __html: 'London, GB' }}
-                    />
-                    , {data?.weather?.[0].description ?? '...'}.
+                <div className="flex flex-col items-center justify-center space-y-12">
+                    <div className="text-2xl text-neutral-400">
+                        Right now in&nbsp;
+                        <span
+                            autoFocus
+                            contentEditable
+                            onInput={handleInput}
+                            onKeyDown={handleKeyDown}
+                            className="border-b border-b-neutral-400 p-2 font-bold text-white focus:border-b-white"
+                            dangerouslySetInnerHTML={{ __html: 'London, GB' }}
+                        />
+                        , {data?.weather?.[0].description ?? '...'}.
+                    </div>
+
+                    <div className="flex flex-col items-center space-y-4">
+                        <div className="text-8xl font-bold">
+                            {data?.main ? k2c(data.main.temp) : '...'}
+                        </div>
+
+                        <div className="flex divide-x">
+                            <div className="px-2">
+                                {data?.main ? k2c(data.main.temp_min) : '...'}
+                                &deg;
+                            </div>
+                            <div className="px-2">
+                                {data?.main ? k2c(data.main.temp_max) : '...'}
+                                &deg;
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>
     );
+};
+
+const k2c = (k: number) => {
+    return Math.round(k - 273.15);
 };
 
 export default App;
