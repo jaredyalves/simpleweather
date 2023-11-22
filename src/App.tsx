@@ -8,6 +8,7 @@ interface geolocation {
 interface weather {
     weather: {
         description: string;
+        icon: string;
     }[];
     main: {
         temp: number;
@@ -82,19 +83,37 @@ const App = () => {
                         , {data?.weather?.[0].description ?? '...'}.
                     </div>
 
-                    <div className="flex flex-col items-center space-y-4">
-                        <div className="text-8xl font-bold">
-                            {data?.main ? k2c(data.main.temp) : '...'}
+                    <div className="flex items-center justify-center space-x-12">
+                        <div className="flex flex-col items-center justify-center">
+                            {data?.weather ? (
+                                <img
+                                    src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png`}
+                                    alt={data.weather[0].description}
+                                    className="h-32 w-32"
+                                />
+                            ) : (
+                                '...'
+                            )}
                         </div>
 
-                        <div className="flex divide-x">
-                            <div className="px-2">
-                                {data?.main ? k2c(data.main.temp_min) : '...'}
-                                &deg;
+                        <div className="flex flex-col items-center space-y-4">
+                            <div className="text-8xl font-bold">
+                                {data?.main ? k2c(data.main.temp) : '...'}
                             </div>
-                            <div className="px-2">
-                                {data?.main ? k2c(data.main.temp_max) : '...'}
-                                &deg;
+
+                            <div className="flex divide-x">
+                                <div className="px-2">
+                                    {data?.main
+                                        ? k2c(data.main.temp_min)
+                                        : '...'}
+                                    &deg;
+                                </div>
+                                <div className="px-2">
+                                    {data?.main
+                                        ? k2c(data.main.temp_max)
+                                        : '...'}
+                                    &deg;
+                                </div>
                             </div>
                         </div>
                     </div>
