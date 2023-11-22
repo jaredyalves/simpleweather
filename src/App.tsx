@@ -14,6 +14,8 @@ interface weather {
         temp: number;
         temp_min: number;
         temp_max: number;
+        feels_like: number;
+        humidity: number;
     };
     name: string;
     sys: {
@@ -165,8 +167,43 @@ const App = () => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col items-center justify-center">
-                            <div className="h-32 w-32">&nbsp;</div>
+                        <div className="flex h-32 w-32 flex-col items-center justify-center space-y-4">
+                            <div className="grid grid-cols-2 space-x-2">
+                                <div className="flex items-center justify-end">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 320 512"
+                                        className="h-6 w-6 fill-neutral-400"
+                                    >
+                                        <path d="M112 112c0-26.5 21.5-48 48-48s48 21.5 48 48V276.5c0 17.3 7.1 31.9 15.3 42.5C233.8 332.6 240 349.5 240 368c0 44.2-35.8 80-80 80s-80-35.8-80-80c0-18.5 6.2-35.4 16.7-48.9c8.2-10.6 15.3-25.2 15.3-42.5V112zM160 0C98.1 0 48 50.2 48 112V276.5c0 .1-.1 .3-.2 .6c-.2 .6-.8 1.6-1.7 2.8C27.2 304.2 16 334.8 16 368c0 79.5 64.5 144 144 144s144-64.5 144-144c0-33.2-11.2-63.8-30.1-88.1c-.9-1.2-1.5-2.2-1.7-2.8c-.1-.3-.2-.5-.2-.6V112C272 50.2 221.9 0 160 0zm0 416a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" />
+                                    </svg>
+                                </div>
+
+                                <div className="flex items-center justify-start font-bold">
+                                    {data?.main
+                                        ? symbol === Symbol.Celsius
+                                            ? k2c(data.main.feels_like)
+                                            : k2f(data.main.feels_like)
+                                        : '...'}
+                                    &deg;
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 space-x-2">
+                                <div className="flex items-center justify-end">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 384 512"
+                                        className="h-6 w-6 fill-neutral-400"
+                                    >
+                                        <path d="M192 512C86 512 0 426 0 320C0 228.8 130.2 57.7 166.6 11.7C172.6 4.2 181.5 0 191.1 0h1.8c9.6 0 18.5 4.2 24.5 11.7C253.8 57.7 384 228.8 384 320c0 106-86 192-192 192zM96 336c0-8.8-7.2-16-16-16s-16 7.2-16 16c0 61.9 50.1 112 112 112c8.8 0 16-7.2 16-16s-7.2-16-16-16c-44.2 0-80-35.8-80-80z" />
+                                    </svg>
+                                </div>
+
+                                <div className="flex items-center justify-start font-bold">
+                                    {data?.main?.humidity ?? '...'}%
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
