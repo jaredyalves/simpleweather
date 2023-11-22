@@ -17,9 +17,23 @@ interface weather {
     };
 }
 
+enum Symbol {
+    Celsius,
+    Fahrenheit,
+}
+
 const App = () => {
-    const [query, setQuery] = useState<string>('London, GB');
     const [data, setData] = useState<weather | null>(null);
+    const [query, setQuery] = useState<string>('London, GB');
+    const [symbol, setSymbol] = useState(Symbol.Celsius);
+
+    const handleCelsius = () => {
+        setSymbol(Symbol.Celsius);
+    };
+
+    const handleFahrenheit = () => {
+        setSymbol(Symbol.Fahrenheit);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -68,8 +82,8 @@ const App = () => {
 
     return (
         <>
-            <div className="flex h-screen flex-col items-center justify-center">
-                <div className="flex flex-col items-center justify-center space-y-12">
+            <div className="flex h-screen flex-col items-center justify-between">
+                <div className="flex h-full flex-col items-center justify-center space-y-12">
                     <div className="text-2xl text-neutral-400">
                         Right now in&nbsp;
                         <span
@@ -97,9 +111,13 @@ const App = () => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col items-center space-y-4">
+                        <div className="flex w-32 flex-col items-center space-y-4">
                             <div className="text-8xl font-bold">
-                                {data?.main ? k2c(data.main.temp) : '...'}
+                                {data?.main
+                                    ? symbol === Symbol.Celsius
+                                        ? k2c(data.main.temp)
+                                        : k2f(data.main.temp)
+                                    : '...'}
                             </div>
 
                             <div className="flex divide-x">
@@ -123,6 +141,29 @@ const App = () => {
                         </div>
                     </div>
                 </div>
+
+                <div className="flex items-center justify-center divide-x divide-neutral-400 py-4">
+                    <button
+                        onClick={handleCelsius}
+                        className={`px-2 ${
+                            symbol === Symbol.Celsius
+                                ? 'text-white'
+                                : 'text-neutral-400'
+                        }`}
+                    >
+                        &deg;C
+                    </button>
+                    <button
+                        onClick={handleFahrenheit}
+                        className={`px-2 ${
+                            symbol === Symbol.Fahrenheit
+                                ? 'text-white'
+                                : 'text-neutral-400'
+                        }`}
+                    >
+                        &deg;F
+                    </button>
+                </div>
             </div>
         </>
     );
@@ -130,6 +171,10 @@ const App = () => {
 
 const k2c = (k: number) => {
     return Math.round(k - 273.15);
+};
+
+const k2f = (k: number) => {
+    return Math.round(k2c(k) * 1.8 + 32);
 };
 
 export default App;
