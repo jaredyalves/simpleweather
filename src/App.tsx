@@ -38,25 +38,36 @@ const App = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(
-                    `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=1&appid=${
-                        import.meta.env.VITE_OPENWEATHER_API_KEY
-                    }`,
-                );
-                const geolocation = (await response.json()) as geolocation[];
-
-                const weather: Response = await fetch(
-                    `https://api.openweathermap.org/data/2.5/weather?lat=${
-                        geolocation[0].lat
-                    }&lon=${geolocation[0].lon}&appid=${
-                        import.meta.env.VITE_OPENWEATHER_API_KEY
-                    }`,
+                const geolocation = await fetchGeolocation();
+                const weather = await fetchWeather(
+                    geolocation[0].lat,
+                    geolocation[0].lon,
                 );
 
-                setData((await weather.json()) as weather);
+                setData(weather);
             } catch (error) {
                 console.error(error);
             }
+        };
+
+        const fetchGeolocation = async () => {
+            const response = await fetch(
+                `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=1&appid=${
+                    import.meta.env.VITE_OPENWEATHER_API_KEY
+                }`,
+            );
+
+            return (await response.json()) as geolocation[];
+        };
+
+        const fetchWeather = async (lat: number, lon: number) => {
+            const response = await fetch(
+                `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${
+                    import.meta.env.VITE_OPENWEATHER_API_KEY
+                }`,
+            );
+
+            return (await response.json()) as weather;
         };
 
         const delay = setTimeout(() => {
