@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface geolocation {
     lat: number;
@@ -15,6 +15,10 @@ interface weather {
         temp_min: number;
         temp_max: number;
     };
+    name: string;
+    sys: {
+        country: string;
+    };
 }
 
 enum Symbol {
@@ -27,6 +31,8 @@ const App = () => {
     const [query, setQuery] = useState<string>('London, GB');
     const [symbol, setSymbol] = useState(Symbol.Celsius);
 
+    const ref = useRef<HTMLSpanElement>(null);
+
     const handleCelsius = () => {
         setSymbol(Symbol.Celsius);
     };
@@ -34,6 +40,27 @@ const App = () => {
     const handleFahrenheit = () => {
         setSymbol(Symbol.Fahrenheit);
     };
+
+    useEffect(() => {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                fetchWeather(
+                    position.coords.latitude,
+                    position.coords.longitude,
+                )
+                    .then((weather) => {
+                        setQuery(`${weather.name}, ${weather.sys.country}`);
+                        if (ref.current) {
+                            ref.current.innerHTML = `${weather.name}, ${weather.sys.country}`;
+                        }
+                        setData(weather);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            });
+        }
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -58,16 +85,6 @@ const App = () => {
             );
 
             return (await response.json()) as geolocation[];
-        };
-
-        const fetchWeather = async (lat: number, lon: number) => {
-            const response = await fetch(
-                `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${
-                    import.meta.env.VITE_OPENWEATHER_API_KEY
-                }`,
-            );
-
-            return (await response.json()) as weather;
         };
 
         const delay = setTimeout(() => {
@@ -98,6 +115,7 @@ const App = () => {
                     <div className="text-2xl text-neutral-400">
                         Right now in&nbsp;
                         <span
+                            ref={ref}
                             autoFocus
                             contentEditable
                             onInput={handleInput}
@@ -186,6 +204,16 @@ const k2c = (k: number) => {
 
 const k2f = (k: number) => {
     return Math.round(k2c(k) * 1.8 + 32);
+};
+
+const fetchWeather = async (lat: number, lon: number) => {
+    const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${
+            import.meta.env.VITE_OPENWEATHER_API_KEY
+        }`,
+    );
+
+    return (await response.json()) as weather;
 };
 
 export default App;
