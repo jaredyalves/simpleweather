@@ -85,15 +85,16 @@ const App = () => {
 
                     <div className="flex items-center justify-center space-x-12">
                         <div className="flex flex-col items-center justify-center">
-                            {data?.weather ? (
-                                <img
-                                    src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png`}
-                                    alt={data.weather[0].description}
-                                    className="h-32 w-32"
-                                />
-                            ) : (
-                                '...'
-                            )}
+                            <div className="h-32 w-32">
+                                {data?.weather ? (
+                                    <img
+                                        src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png`}
+                                        alt={data.weather[0].description}
+                                    />
+                                ) : (
+                                    '...'
+                                )}
+                            </div>
                         </div>
 
                         <div className="flex flex-col items-center space-y-4">
@@ -115,6 +116,10 @@ const App = () => {
                                     &deg;
                                 </div>
                             </div>
+                        </div>
+
+                        <div className="flex flex-col items-center justify-center">
+                            <div className="h-32 w-32">&nbsp;</div>
                         </div>
                     </div>
                 </div>
